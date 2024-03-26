@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://aka.ms/teams-toolkit/v1.2/yaml.schema.json
+# Visit https://aka.ms/teamsfx-v5.0-guide for details on this file
+# Visit https://aka.ms/teamsfx-actions for details on actions
+version: v1.2
+
+additionalMetadata:
+  sampleTag: Microsoft-Teams-Samples:bot-conversation-sso-quickstart-js
+
+environmentFolderPath: ./env
+projectId: 7a4ae26f-a1e1-4178-8e30-3fd2161f8d10
