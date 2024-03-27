@@ -3,6 +3,7 @@
 
 const { ConfirmPrompt, DialogSet, DialogTurnStatus, OAuthPrompt, WaterfallDialog } = require('botbuilder-dialogs');
 const { LogoutDialog } = require('./logoutDialog');
+const { TurnContext } = require('botbuilder');
 
 const CONFIRM_PROMPT = 'ConfirmPrompt';
 const MAIN_DIALOG = 'MainDialog';
@@ -39,6 +40,9 @@ class MainDialog extends LogoutDialog {
         const dialogSet = new DialogSet(accessor);
         dialogSet.add(this);
         const dialogContext = await dialogSet.createContext(context);
+
+        //dialogContext.context.activity.userState["message"] = context.activity.text;
+
         const results = await dialogContext.continueDialog();
         if (results.status === DialogTurnStatus.empty) {
             await dialogContext.beginDialog(this.id);
@@ -89,9 +93,16 @@ class MainDialog extends LogoutDialog {
     }
 
     async callSecureAPI(stepContext) {
-        const tokenResponse = stepContext.result;
-        await stepContext.context.sendActivity(`Your Message: ${stepContext.context.text}`);
+                
+        // Access the turnContext
+        var turnContext = stepContext.context;
+        // Now you can access the user's message (NOTE: must be before 'stepContext.result' is called)
+        var userMessage = turnContext.activity.text;
+        // Get token response from previous step (NOTE: This invalidates 'stepContext.context')
+        var tokenResponse = stepContext.result;
+        
         if (tokenResponse && tokenResponse.token) {
+            await stepContext.context.sendActivity(`Your Message: ${userMessage}`);
             await stepContext.context.sendActivity(`Here is your token to call your API ${tokenResponse.token}`);
         }
         return await stepContext.endDialog();
