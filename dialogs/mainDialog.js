@@ -64,7 +64,7 @@ class MainDialog extends LogoutDialog {
             // const client = new SimpleGraphClient(tokenResponse.token);
             // const me = await client.getMe();
             await stepContext.context.sendActivity(`You are successfully logged in.`);
-            // return await stepContext.prompt(CONFIRM_PROMPT, 'Would you like to view your token?');
+            return await stepContext.next(tokenResponse);
 
         }
         return await stepContext.endDialog();
@@ -90,6 +90,7 @@ class MainDialog extends LogoutDialog {
 
     async callSecureAPI(stepContext) {
         const tokenResponse = stepContext.result;
+        await stepContext.context.sendActivity(`Your Message: ${stepContext.context.text}`);
         if (tokenResponse && tokenResponse.token) {
             await stepContext.context.sendActivity(`Here is your token to call your API ${tokenResponse.token}`);
         }
