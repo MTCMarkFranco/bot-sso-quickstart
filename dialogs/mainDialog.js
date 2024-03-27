@@ -8,9 +8,6 @@ const CONFIRM_PROMPT = 'ConfirmPrompt';
 const MAIN_DIALOG = 'MainDialog';
 const MAIN_WATERFALL_DIALOG = 'MainWaterfallDialog';
 const OAUTH_PROMPT = 'OAuthPrompt';
-const { SimpleGraphClient } = require('../simpleGraphClient');
-const { polyfills } = require('isomorphic-fetch');
-const { CardFactory } = require('botbuilder-core');
 
 class MainDialog extends LogoutDialog {
     constructor() {
@@ -27,7 +24,7 @@ class MainDialog extends LogoutDialog {
             this.promptStep.bind(this),
             this.loginStep.bind(this),
             this.ensureOAuth.bind(this),
-            this.displayToken.bind(this)
+            this.callSecureAPI.bind(this)
         ]));
 
         this.initialDialogId = MAIN_WATERFALL_DIALOG;
@@ -63,20 +60,18 @@ class MainDialog extends LogoutDialog {
         if (!tokenResponse || !tokenResponse.token) {
             await stepContext.context.sendActivity('Login was not successful please try again.');
         } else {
-            const client = new SimpleGraphClient(tokenResponse.token);
-            const me = await client.getMe();
-            const title = me ? me.jobTitle : 'UnKnown';
-            await stepContext.context.sendActivity(`You're logged in as ${me.displayName} (${me.userPrincipalName}); your job title is: ${title}; your photo is: `);
-            const photoBase64 = await client.GetPhotoAsync(tokenResponse.token);
-            const card = CardFactory.thumbnailCard("", CardFactory.images([photoBase64]));
-            await stepContext.context.sendActivity({attachments: [card]});
-            return await stepContext.prompt(CONFIRM_PROMPT, 'Would you like to view your token?');
+            
+            // const client = new SimpleGraphClient(tokenResponse.token);
+            // const me = await client.getMe();
+            await stepContext.context.sendActivity(`You are successfully logged in.`);
+            // return await stepContext.prompt(CONFIRM_PROMPT, 'Would you like to view your token?');
+
         }
         return await stepContext.endDialog();
     }
 
     async ensureOAuth(stepContext) {
-        await stepContext.context.sendActivity('Thank you.');
+        //await stepContext.context.sendActivity('Thank you.');
 
         const result = stepContext.result;
         if (result) {
@@ -93,10 +88,10 @@ class MainDialog extends LogoutDialog {
         return await stepContext.endDialog();
     }
 
-    async displayToken(stepContext) {
+    async callSecureAPI(stepContext) {
         const tokenResponse = stepContext.result;
         if (tokenResponse && tokenResponse.token) {
-            await stepContext.context.sendActivity(`Here is your token ${tokenResponse.token}`);
+            await stepContext.context.sendActivity(`Here is your token to call your API ${tokenResponse.token}`);
         }
         return await stepContext.endDialog();
     }
