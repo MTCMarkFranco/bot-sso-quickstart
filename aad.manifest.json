@@ -20,14 +20,14 @@
     },
     "requiredResourceAccess": [
         {
-            "resourceAppId": "Microsoft Graph",
-            "resourceAccess": [
-                {
-                    "id": "User.Read",
-                    "type": "Scope"
-                }
-            ]
-        }
+			"resourceAppId": "54a92fc8-efb7-4485-8b5a-fb9bba924c11",
+			"resourceAccess": [
+				{
+					"id": "d4f50d4e-698e-44b4-a934-777c109a1221",
+					"type": "Scope"
+				}
+			]
+		}
     ],
     "oauth2Permissions": [
         {
